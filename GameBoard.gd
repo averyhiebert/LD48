@@ -9,12 +9,12 @@ var board = []
 var rng = RandomNumberGenerator.new()
 enum tiles {PICK, BIG_COAL, SMALL_COAL, SHOVEL, NOTHING, EMPTY=-1}
 var tile_textures = {
-	tiles.PICK: preload("res://assets/blocks/upscaled/pickaxe_4x.png"),
-	tiles.BIG_COAL: preload("res://assets/blocks/upscaled/big_coal_4x.png"),
-	tiles.SMALL_COAL: preload("res://assets/blocks/upscaled/small_coal_4x.png"),
-	tiles.SHOVEL: preload("res://assets/blocks/upscaled/shovel_4x.png"),
-	tiles.NOTHING: preload("res://assets/blocks/upscaled/nothing_4x.png"),
-	tiles.EMPTY: preload("res://assets/blocks/upscaled/outline_4x.png")
+	tiles.PICK: load("res://assets/blocks/upscaled/pickaxe_4x.png"),
+	tiles.BIG_COAL: load("res://assets/blocks/upscaled/big_coal_4x.png"),
+	tiles.SMALL_COAL: load("res://assets/blocks/upscaled/small_coal_4x.png"),
+	tiles.SHOVEL: load("res://assets/blocks/upscaled/shovel_4x.png"),
+	tiles.NOTHING: load("res://assets/blocks/upscaled/nothing_4x.png"),
+	tiles.EMPTY: load("res://assets/blocks/upscaled/outline_4x.png")
 }
 
 # Information about previous update, if it occurred

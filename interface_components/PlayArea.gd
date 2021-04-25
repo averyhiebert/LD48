@@ -15,7 +15,7 @@ func _ready():
 		for j in range(8):
 			var button = BlockButton.instance()
 			button.connect('pressed',self,'button_pressed',[i,j,button])
-			button.set_normal_texture(preload("res://assets/blocks/upscaled/outline_4x.png"))
+			button.set_normal_texture(load("res://assets/blocks/upscaled/outline_4x.png"))
 			button.modulate = Color(0,0,0,0) # i.e. make button invisible
 			buttons[i].push_back(button)
 			add_child(button) # Actually add the button to scene

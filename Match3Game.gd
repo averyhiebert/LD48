@@ -12,7 +12,7 @@ var shovel_damage = 0
 var picks_broken = 0
 var shovels_broken = 0
 
-const DAMAGE_THRESHOLD = 10
+const DAMAGE_THRESHOLD = 7
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -77,6 +77,7 @@ func end_of_week():
 	Global.last_week_coal = coal
 	Global.last_week_picks_broken = picks_broken
 	Global.last_week_shovels_broken = shovels_broken
+# warning-ignore:return_value_discarded
 	get_tree().change_scene("res://EndOfWeek.tscn")
 
 # Individual animation functions ===============================================
@@ -107,7 +108,8 @@ func drop_tile(sprite,drop_size):
 	tween.playback_process_mode = tween.TWEEN_PROCESS_IDLE
 	add_child(tween)
 	tween.interpolate_property(sprite, "position",
-			sprite.position, sprite.position + Vector2(0,tiles_to_distance(drop_size)), 1,
+			sprite.position, sprite.position + Vector2(0,
+			tiles_to_distance(drop_size)), 1,
 			Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	tween.start()
 

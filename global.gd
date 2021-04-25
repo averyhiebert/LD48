@@ -6,8 +6,8 @@ var week = 1
 var hours_per_week = 60
 var hourly_wage = 5
 
-const PICK_PRICE = 34
-const SHOVEL_PRICE = 34
+const PICK_PRICE = 40
+const SHOVEL_PRICE = 40
 const ROOM_AND_BOARD = 200
 const INTEREST_RATE = 0.15
 
