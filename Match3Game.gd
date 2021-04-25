@@ -34,6 +34,12 @@ func _ready():
 	shovel_bar.max_value = DAMAGE_THRESHOLD
 	
 	update_bars()
+	
+	# Hack for resizing screen
+	get_tree().root.connect("size_changed", self, "resize_grid")
+
+func resize_grid():
+	update_board_sprites(true)
 
 func handle_switch(tile1,tile2):
 	# Handle attempt by the user to switch two tiles
@@ -185,7 +191,7 @@ func initialize_tile_sprites():
 			add_child(sprite) # TODO Move to better location
 			drop_tile(sprite,8)
 
-func update_board_sprites():
+func update_board_sprites(nodrop=false):
 	# For now, just update sprites to match the new board
 	positions = button_grid.button_positions()
 	for i in range(gameboard.size):
@@ -202,9 +208,12 @@ func update_board_sprites():
 			tile_sprites[i][j] = new_sprite
 			add_child(new_sprite)
 			
-			if gameboard.drop_heights[i][j] > 0:
+			if nodrop:
+				# No drop animation (used when resizing window)
+				add_child(new_sprite)
+			elif gameboard.drop_heights[i][j] > 0:
 				# Do the drop tweening
 				var start_pos = new_sprite.position - Vector2(0,tiles_to_distance(gameboard.drop_heights[i][j]))
 				new_sprite.position = start_pos
-				add_child(new_sprite) # TODO Move to better location
+				add_child(new_sprite)
 				drop_tile(new_sprite,gameboard.drop_heights[i][j])
