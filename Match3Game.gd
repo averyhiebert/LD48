@@ -23,7 +23,17 @@ func _ready():
 	gameboard = GameBoard.new()
 	yield(get_tree().create_timer(0.25), "timeout") # Workaround for some sort of race condition :(
 	initialize_tile_sprites()
-	update_label()
+	
+	# Initialize progress bars
+	var quota_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/QuotaHbox/QuotaProgress
+	quota_bar.max_value = Global.weekly_quota
+	
+	var pick_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PickHbox/TextureProgress
+	var shovel_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/ShovelHbox/TextureProgress
+	pick_bar.max_value = DAMAGE_THRESHOLD
+	shovel_bar.max_value = DAMAGE_THRESHOLD
+	
+	update_bars()
 
 func handle_switch(tile1,tile2):
 	# Handle attempt by the user to switch two tiles
@@ -38,10 +48,34 @@ func handle_switch(tile1,tile2):
 	else:
 		print(gameboard.board[tile1[0]][tile1[1]], gameboard.board[tile2[0]][tile2[1]])
 
-func update_label():
-	var text = "Week %d. Progress towards weekly quota: %d/%d" % [Global.week, coal, Global.weekly_quota]
-	var label = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/TitleLabel
-	label.text = text
+func update_bars():
+	var tween = Tween.new()
+	tween.playback_process_mode = tween.TWEEN_PROCESS_IDLE
+	add_child(tween)
+	
+	var quota_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/QuotaHbox/QuotaProgress
+	var pick_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PickHbox/TextureProgress
+	var shovel_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/ShovelHbox/TextureProgress
+	
+	var pick_health = DAMAGE_THRESHOLD - pick_damage
+	var shovel_health = DAMAGE_THRESHOLD - shovel_damage
+	
+	tween.interpolate_property(quota_bar,"value",
+		quota_bar.value,coal,0.5,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+	tween.interpolate_property(pick_bar,"value",
+		pick_bar.value, pick_health, 0.5, Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+	tween.interpolate_property(shovel_bar,"value",
+		shovel_bar.value, shovel_health, 0.5, Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+	tween.start()
+	
+	# Update the tallies
+	#  In a more ideal world, I would create a scene/class for the tally instead
+	#    of this messy hack, but Ludum Dare is not an ideal world.
+	var pick_tally = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PickHbox/tally
+	var shovel_tally = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/ShovelHbox/tally
+	
+	pick_tally.texture = load("res://assets/interface_elements/tally%d.png" % min(picks_broken,5))
+	shovel_tally.texture = load("res://assets/interface_elements/tally%d.png" % min(shovels_broken,5))
 
 # Scoring / debt-game related functions ========================================
 
@@ -68,7 +102,7 @@ func score_broken_tiles():
 		shovel_damage = 0
 		shovels_broken += 1
 	
-	update_label()
+	update_bars()
 	if coal >= Global.weekly_quota:
 		yield(get_tree().create_timer(1), "timeout")
 		end_of_week()
