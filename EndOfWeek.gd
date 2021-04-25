@@ -9,10 +9,9 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#dummy_data_for_testing() # TODO Remove this eventually, obviously
-	create_summary()
-	
 	var button = $CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer/ToolButton
 	button.connect("pressed",self,"next_week")
+	create_summary() # Note: must come after connecting button
 
 func next_week():
 	Global.week += 1
@@ -24,7 +23,7 @@ func dummy_data_for_testing():
 	#  (Necessary for testing purposes)
 	Global.last_week_picks_broken = 3
 	Global.last_week_shovels_broken = 1
-	Global.balance = -99
+	Global.balance = -100
 
 func create_summary():
 	var summary_label = $CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer/Summary
@@ -32,7 +31,7 @@ func create_summary():
 	var income = Global.hourly_wage * Global.hours_per_week
 	var summary_text = " \n\nIncome:\n"
 	#summary_text += "    Wages: $%d (%d hours @ $%d/hr )\n\n" % [income, Global.hours_per_week, Global.hourly_wage]
-	summary_text += "    Wages:        $%.2f\n\n" % income
+	summary_text += "    Wages:        $ %.2f\n\n" % income
 	
 	summary_text += "Expenses:\n"
 	summary_text += "    Room & Board: $%.2f\n" % (-1* Global.ROOM_AND_BOARD)
@@ -57,7 +56,20 @@ func create_summary():
 	summary_text += "Previous Balance: $%.2f\n" % Global.balance
 	summary_text += "Net Change:       $%.2f\n" % total
 	
-	Global.balance += total
-	summary_text += "New Balance:      $%.2f\n\n\n\n" % (Global.balance)
-	
+	if income < (Global.ROOM_AND_BOARD - interest):
+		summary_text += "\nNote: Credit is offered for\n"
+		summary_text += "      EQUIPMENT PURCHASES ONLY.\n"
+		
+		var button = $CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer/ToolButton
+		button.text = "!! UNABLE TO PAY !!"
+		button.disconnect("pressed",self,"next_week")
+		button.connect("pressed",self,"game_over")
+	else:	
+		Global.balance += total
+		summary_text += "New Balance:      $%.2f\n\n\n\n" % (Global.balance)
+			
 	summary_label.text = summary_text
+
+func game_over():
+	get_tree().change_scene("res://GameOverScreen.tscn")
+
