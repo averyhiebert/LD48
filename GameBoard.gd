@@ -1,4 +1,5 @@
 # Contains the main match 3 gameplay logic
+# TODO: Make up my mind about naming convention "switch" vs "swap"
 extends Object
 
 class_name GameBoard
@@ -15,49 +16,86 @@ var tile_textures = {
 	tiles.EMPTY: preload("res://assets/blocks/upscaled/outline_4x.png")
 }
 
+# Information about previous update, if it occurred
+#   (Used for meta-gameplay and animation purposes)
+var changed = false
+var prev_run_lengths = []
+var deletions = [] # Array of form [tile type, run size]
+var drop_heights = [] # 2d Array telling how far each new tile fell
+
 
 func _init():
 	rng.randomize()
-	
-	# Initialize board
+	# Initialize tiles
 	for i in range(size):
 		board.append([])
 		for j in range(size):
 			board[i].append(random_tile())
 	
-	# Update until no more groups
-	var needs_update = update_board()
-	var count = 0
-	while update_board(): # Update board until no sets remain
-		pass
+	reset_drop_heights(size) # Need to initialize the 2D Array
+	# Update as needed to eliminate all existing matches
+	while update_board(): pass
+	reset_drop_heights(size) # Maybe should change this to 0, instead of size?
+
+func reset_drop_heights(value):
+	# Mainly used for initialization
+	for i in range(size):
+		drop_heights.append([])
+		for j in range(size):
+			drop_heights[i].append(value)
 
 func random_tile():
-	# Return index of a random valid tile
+	# Return index of a random tile
 	return rng.randi_range(tiles.PICK,tiles.SHOVEL)
 
-func get_texture(row,col):
+func get_texture(row,col):   
 	# Get the texture for the tile at a given location
 	return tile_textures[board[row][col]]
 
 func update_board():
-	# Mutate own board state to remove runs of 3 or greater
-	#  (MAY BE MADE OBSOLETE BY FUNCTIONS WHICH GIVE ADDITIONAL INFORMATION LATER)
-	# Return true if any changes occurred, else talse
+	# Mutate own board state to remove runs of 3 or greater.
+	# This includes recording information about what changes occurred.
+	# Return true if any changes occurred, else false
+	
+	# Note: these two values reset regardless of whether changes occurr
+	deletions = []
+	prev_run_lengths = _run_lengths(board)
 	
 	if not _check_for_update(board):
+		changed = false
 		return false
 	
 	var run_length = _run_lengths(board)
-
+	
 	for col_i in range(size):
-		var new_col = []
+		var new_col = [] # i.e. what will the column look like after drop
+		var col_drop_heights = []
+		var curr_drop_height = 0
+		
 		for row_i in range(size):
 			if run_length[row_i][col_i] < 3:
+				# No deletion occurs, tile stays
 				new_col.append(board[row_i][col_i])
+			else:
+				# Record deletion
+				deletions.append([ board[row_i][col_i], run_length[row_i][col_i] ])
+		
+		# Figure out drop heights (Note reverse iteration order)
+		for row_i in range(size):
+			if run_length[size-row_i-1][col_i] < 3:
+				col_drop_heights.append(curr_drop_height)
+			else:
+				curr_drop_height += 1
+				
+		# Account for newly added tiles:
 		for i in range(size - new_col.size()):
 			new_col.push_front(random_tile())
+			col_drop_heights.append(curr_drop_height)
+			
+		# Add new column to board
 		for row_i in range(size):
 			board[row_i][col_i] = new_col[row_i]
+			drop_heights[row_i][col_i] = col_drop_heights[size - row_i - 1]
 	return true
 
 func copy_board():
@@ -82,12 +120,19 @@ func set_board(new_board):
 			board[i][j] = new_board[i][j]
 
 func do_switch(tile1,tile2):
-	# Switch two values, and if necessary update the board
+	# Switch two values, but do not update the board yet
 	var swapped = _swapped_board(tile1,tile2)
-	if _check_for_update(swapped):
-		set_board(swapped)
-		while update_board():
-			pass
+	set_board(swapped)
+	#if _check_for_update(swapped):
+	#	set_board(swapped)
+	#	while update_board():
+	#		pass
+
+func can_do_switch(tile1,tile2):
+	# Return true if the two tiles can be switched (i.e. it would lead
+	#  to an update), or false otherwise
+	var swapped = _swapped_board(tile1,tile2)
+	return _check_for_update(swapped)
 
 func _check_for_update(new_board):
 	# Return true if an update must be performed on new_board,

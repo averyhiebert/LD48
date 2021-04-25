@@ -21,10 +21,6 @@ func _ready():
 			add_child(button) # Actually add the button to scene
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 func button_pressed(row,col,button):
 	if not selection:
 		selection = [row,col]
