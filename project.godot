@@ -24,6 +24,10 @@ config/name="LudumDare48"
 run/main_scene="res://Match3Game.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://global.gd"
+
 [display]
 
 window/size/width=600

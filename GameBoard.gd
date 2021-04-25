@@ -7,12 +7,13 @@ class_name GameBoard
 var size = 8
 var board = []
 var rng = RandomNumberGenerator.new()
-enum tiles {PICK, BIG_COAL, SMALL_COAL, SHOVEL, EMPTY=-1}
+enum tiles {PICK, BIG_COAL, SMALL_COAL, SHOVEL, NOTHING, EMPTY=-1}
 var tile_textures = {
 	tiles.PICK: preload("res://assets/blocks/upscaled/pickaxe_4x.png"),
 	tiles.BIG_COAL: preload("res://assets/blocks/upscaled/big_coal_4x.png"),
 	tiles.SMALL_COAL: preload("res://assets/blocks/upscaled/small_coal_4x.png"),
 	tiles.SHOVEL: preload("res://assets/blocks/upscaled/shovel_4x.png"),
+	tiles.NOTHING: preload("res://assets/blocks/upscaled/nothing_4x.png"),
 	tiles.EMPTY: preload("res://assets/blocks/upscaled/outline_4x.png")
 }
 
@@ -46,7 +47,7 @@ func reset_drop_heights(value):
 
 func random_tile():
 	# Return index of a random tile
-	return rng.randi_range(tiles.PICK,tiles.SHOVEL)
+	return rng.randi_range(tiles.PICK,tiles.NOTHING)
 
 func get_texture(row,col):   
 	# Get the texture for the tile at a given location
@@ -123,10 +124,6 @@ func do_switch(tile1,tile2):
 	# Switch two values, but do not update the board yet
 	var swapped = _swapped_board(tile1,tile2)
 	set_board(swapped)
-	#if _check_for_update(swapped):
-	#	set_board(swapped)
-	#	while update_board():
-	#		pass
 
 func can_do_switch(tile1,tile2):
 	# Return true if the two tiles can be switched (i.e. it would lead
