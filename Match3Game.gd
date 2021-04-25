@@ -18,7 +18,11 @@ const DAMAGE_THRESHOLD = 7
 func _ready():
 	button_grid = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PlayArea
 	button_grid.connect("do_switch",self,"handle_switch")
-
+	
+	# Set main title
+	var title_label = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/MarginContainer/MarginContainer/Title
+	title_label.text = "Week %d" % Global.week
+	
 	# Initialize the game
 	gameboard = GameBoard.new()
 	yield(get_tree().create_timer(0.25), "timeout") # Workaround for some sort of race condition :(
@@ -27,12 +31,10 @@ func _ready():
 	# Initialize progress bars
 	var quota_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/QuotaHbox/QuotaProgress
 	quota_bar.max_value = Global.weekly_quota
-	
 	var pick_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PickHbox/TextureProgress
 	var shovel_bar = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/ShovelHbox/TextureProgress
 	pick_bar.max_value = DAMAGE_THRESHOLD
 	shovel_bar.max_value = DAMAGE_THRESHOLD
-	
 	update_bars()
 	
 	# Hack for resizing screen
