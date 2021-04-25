@@ -11,7 +11,7 @@ func _ready():
 	#dummy_data_for_testing() # TODO Remove this eventually, obviously
 	create_summary()
 	
-	var button = $CanvasLayer/MarginContainer/CenterContainer/VBoxContainer/ToolButton
+	var button = $CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer/ToolButton
 	button.connect("pressed",self,"next_week")
 
 func next_week():
@@ -27,10 +27,10 @@ func dummy_data_for_testing():
 	Global.balance = -99
 
 func create_summary():
-	var summary_label = $CanvasLayer/MarginContainer/CenterContainer/VBoxContainer/Summary
+	var summary_label = $CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer/Summary
 	
 	var income = Global.hourly_wage * Global.hours_per_week
-	var summary_text = " \n\n\nCredits:\n"
+	var summary_text = " \n\n\nIncome:\n"
 	summary_text += "    Wages: $%d (%d hours @ $%d/hr )\n\n" % [income, Global.hours_per_week, Global.hourly_wage]
 	
 	summary_text += "Expenses:\n"
@@ -48,7 +48,7 @@ func create_summary():
 	
 	var total = (income  - Global.ROOM_AND_BOARD + pick_cost + shovel_cost + interest)
 	
-	summary_text += "\n---------------------------------------------------\n"
+	summary_text += "\n---------------------------\n"
 	summary_text += "\nNet Change in Balance: $%.2f\n" % total
 	
 	Global.balance += total
