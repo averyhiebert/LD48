@@ -25,9 +25,9 @@ __meta__ = {
 }
 
 [node name="FrustratingTextbox" type="MarginContainer" parent="CanvasLayer/CenterContainer"]
-margin_left = 82.0
+margin_left = 24.0
 margin_top = 248.0
-margin_right = 518.0
+margin_right = 412.0
 margin_bottom = 351.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -38,7 +38,7 @@ __meta__ = {
 }
 
 [node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/CenterContainer/FrustratingTextbox"]
-margin_right = 436.0
+margin_right = 388.0
 margin_bottom = 103.0
 texture = ExtResource( 2 )
 patch_margin_left = 8
@@ -47,7 +47,7 @@ patch_margin_right = 8
 patch_margin_bottom = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CenterContainer/FrustratingTextbox"]
-margin_right = 436.0
+margin_right = 388.0
 margin_bottom = 103.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -57,25 +57,25 @@ custom_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 426.0
+margin_right = 378.0
 margin_bottom = 93.0
 
 [node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer"]
-margin_right = 416.0
+margin_right = 368.0
 margin_bottom = 35.0
 
 [node name="Title" type="Label" parent="CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer/CenterContainer2"]
-margin_right = 416.0
+margin_right = 368.0
 margin_bottom = 35.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.34902, 0.247059, 0.184314, 1 )
 text = "~~ The Company Store ~~
-Your End-Of-Week Statement"
+End-Of-Week Statement"
 align = 1
 
 [node name="Summary" type="Label" parent="CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer"]
 margin_top = 39.0
-margin_right = 416.0
+margin_right = 368.0
 margin_bottom = 55.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.34902, 0.247059, 0.184314, 1 )
@@ -83,7 +83,7 @@ text = "Summary Goes Here"
 
 [node name="ToolButton" type="ToolButton" parent="CanvasLayer/CenterContainer/FrustratingTextbox/MarginContainer/VBoxContainer"]
 margin_top = 59.0
-margin_right = 416.0
+margin_right = 368.0
 margin_bottom = 83.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.34902, 0.247059, 0.184314, 1 )
