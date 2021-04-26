@@ -12,12 +12,15 @@ var shovel_damage = 0
 var picks_broken = 0
 var shovels_broken = 0
 
+var selection_highlight = null
+
 const DAMAGE_THRESHOLD = 7
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	button_grid = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PlayArea
 	button_grid.connect("do_switch",self,"handle_switch")
+	button_grid.connect("set_selection",self,"update_selection")
 	
 	# Set main title
 	var title_label = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/MarginContainer/MarginContainer/Title
@@ -43,9 +46,24 @@ func _ready():
 func resize_grid():
 	update_board_sprites(true)
 
+func update_selection(selection):
+	# Selectiong is [row,col] or null
+	if selection:
+		var sprite = Sprite.new()
+		sprite.texture = load("res://assets/interface_elements/selection_outline.png")
+		sprite.position = positions[selection[0]][selection[1]] \
+			+ Vector2(sprite.texture.get_width()/2 - 4,sprite.texture.get_height()/2 - 4)
+		selection_highlight = sprite
+		add_child(selection_highlight)
+	elif selection_highlight:
+		remove_child(selection_highlight)
+		selection_highlight = null
+
 func handle_switch(tile1,tile2):
+	update_selection(null)
 	# Handle attempt by the user to switch two tiles
 	if gameboard.can_do_switch(tile1,tile2):
+		button_grid.locked = true
 		gameboard.do_switch(tile1,tile2)
 		visually_swap_tiles(tile1,tile2)
 		yield(get_tree().create_timer(0.5), "timeout")
@@ -53,6 +71,7 @@ func handle_switch(tile1,tile2):
 			update_board_sprites()
 			score_broken_tiles()
 			yield(get_tree().create_timer(1), "timeout")
+		button_grid.locked = false
 	else:
 		print(gameboard.board[tile1[0]][tile1[1]], gameboard.board[tile2[0]][tile2[1]])
 

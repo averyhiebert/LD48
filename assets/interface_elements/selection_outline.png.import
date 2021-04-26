@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tally2.png-8931ac90e29bfc664a8134396879395b.stex"
+path="res://.import/selection_outline.png-96ea17cdf16f213d955058aefb785ba9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/interface_elements/tally2.png"
-dest_files=[ "res://.import/tally2.png-8931ac90e29bfc664a8134396879395b.stex" ]
+source_file="res://assets/interface_elements/selection_outline.png"
+dest_files=[ "res://.import/selection_outline.png-96ea17cdf16f213d955058aefb785ba9.stex" ]
 
 [params]
 

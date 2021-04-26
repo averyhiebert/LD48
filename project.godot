@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="LudumDare48"
+config/name="The Company Store"
 run/main_scene="res://MainMenu.tscn"
 config/icon="res://icon.png"
 

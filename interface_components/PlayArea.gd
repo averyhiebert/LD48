@@ -3,9 +3,12 @@ extends GridContainer
 export (PackedScene) var BlockButton
 
 signal do_switch(tile1,tile2)
+signal set_selection(tile)
 
 var buttons = []
 var selection = null # Currently selected tile
+
+var locked = false # Click lockout for when blocks are falling
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -22,10 +25,14 @@ func _ready():
 
 
 func button_pressed(row,col,button):
+	if locked:
+		return
 	if not selection:
 		selection = [row,col]
+		emit_signal("set_selection",selection)
 	elif selection[0] == row and selection[1] == col:
 		selection = null
+		emit_signal("set_selection",selection)
 	else:
 		# Emit "swap" signal for main game
 		emit_signal("do_switch",selection,[row,col])

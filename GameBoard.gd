@@ -127,7 +127,9 @@ func do_switch(tile1,tile2):
 
 func can_do_switch(tile1,tile2):
 	# Return true if the two tiles can be switched (i.e. it would lead
-	#  to an update), or false otherwise
+	#  to an update and they are adjacent), or false otherwise
+	if abs(tile1[0] - tile2[0]) + abs(tile1[1] - tile2[1]) > 1:
+		return false
 	var swapped = _swapped_board(tile1,tile2)
 	return _check_for_update(swapped)
 
