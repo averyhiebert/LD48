@@ -14,10 +14,14 @@ var shovels_broken = 0
 
 var selection_highlight = null
 
+var prev_size = null
+
 const DAMAGE_THRESHOLD = 7
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	prev_size = get_viewport().size
+	
 	button_grid = $CanvasLayer/MainInterfaceContainer/CenterContainer/VBoxContainer/PlayArea
 	button_grid.connect("do_switch",self,"handle_switch")
 	button_grid.connect("set_selection",self,"update_selection")
@@ -43,11 +47,21 @@ func _ready():
 	# Hack for resizing screen
 	get_tree().root.connect("size_changed", self, "resize_grid")
 
+func _physics_process(delta):
+	# Check for change in screen size every frame.  This feels wrong, but 
+	#   size_changed doesn't seem to fire on entering/exiting fullscreen, so
+	#   this might be the only option.
+	var new_size = get_viewport().size
+	if prev_size != new_size:
+		prev_size = new_size
+		resize_grid()
+
+
 func resize_grid():
 	update_board_sprites(true)
 
 func update_selection(selection):
-	# Selectiong is [row,col] or null
+	# Selection is [row,col] or null
 	if selection:
 		var sprite = Sprite.new()
 		sprite.texture = load("res://assets/interface_elements/selection_outline.png")
